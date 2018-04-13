@@ -2,6 +2,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 from numpy import log2
+from pyt.core_modules import Swish
 
 class DiaConvEncoder(nn.Module):
     """get features using dilated convolutions"""
@@ -105,8 +106,9 @@ if __name__ == '__main__':
     classifier = MLP(OUT_CHANNELS, NUM_CLASSES, [128], act_fn=Swish())
     model = DiaConvClf(encoder, classifier)
 
-    # NOTE: not tuned for the problem
-    training_kwargs = {'lr': 1e-3, 'weight_decay': 1e-4, 'batch_size': 64}
+    # NOTE: not tuned for the problem.
+    # need much larger batch size for good training.  small to fit on my laptop
+    training_kwargs = {'lr': 1e-3, 'weight_decay': 1e-4, 'batch_size': 4}
 
     x_transform = Compose([
                         Resize(IM_SIZE), 
